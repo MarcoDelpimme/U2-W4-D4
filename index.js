@@ -64,6 +64,14 @@ function displayImages(animalList) {
       removeCard(column);
     };
 
+    imgCard.addEventListener("click", function () {
+      navigateToDetailPage(photo);
+    });
+
+    titleCard.addEventListener("click", function () {
+      navigateToDetailPage(photo);
+    });
+
     const textMuted = document.createElement("small");
     textMuted.classList.add("text-muted");
     textMuted.innerText = photo.id;
@@ -81,6 +89,11 @@ function displayImages(animalList) {
     card.appendChild(imgCard);
     card.appendChild(cardBody);
   });
+}
+
+function navigateToDetailPage(photo) {
+  const detailURL = `detail.html?imageUrl=${photo.src.large}&title=${photo.alt}&description=${photo.id}&artistLink=${photo.photographer_url}`;
+  window.location.href = detailURL;
 }
 
 const URL2 = "https://api.pexels.com/v1/search?query=cat";
@@ -149,6 +162,14 @@ function displayImages2(animalList) {
       removeCard(column);
     };
 
+    imgCard.addEventListener("click", function () {
+      navigateToDetailPage(photo);
+    });
+
+    titleCard.addEventListener("click", function () {
+      navigateToDetailPage(photo);
+    });
+
     const textMuted = document.createElement("small");
     textMuted.classList.add("text-muted");
     textMuted.innerText = photo.id;
@@ -171,3 +192,41 @@ function displayImages2(animalList) {
 const removeCard = (element) => {
   element.remove();
 };
+
+// RESEARCH BAR
+
+const searchInput = document.getElementById("searchInput");
+const searchBtn = document.getElementById("searchImages");
+
+searchBtn.addEventListener("click", function () {
+  const searchQuery = searchInput.value.trim();
+  if (searchQuery !== "") {
+    const searchURL = `https://api.pexels.com/v1/search?query=${searchQuery}`;
+    fetch(searchURL, {
+      method: "GET",
+      headers: {
+        Authorization: myKey,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error();
+        }
+      })
+      .then((animalList) => {
+        clearImages();
+        displayImages(animalList);
+      })
+      .catch((error) => {
+        console.error("Error fetching images:", error);
+      });
+  }
+});
+
+function clearImages() {
+  const containerCard = document.getElementById("containerCard");
+  containerCard.innerHTML = "";
+}
+// RESEARCH BAR
